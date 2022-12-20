@@ -1,0 +1,21 @@
+From: =?utf-8?q?Ond=C5=99ej_Sur=C3=BD?= <ondrej@sury.org>
+Date: Wed, 22 Jun 2016 12:50:56 +0200
+Subject: Fix the ruby SO suffix
+
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index a921431..9cb6398 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -419,7 +419,7 @@ if test "X$RUBY" != X; then
+ 	AC_MSG_ERROR(No such RUBY linking type $ruby_linking)
+ 	;;
+   esac
+-  RUBY_SO_SUFFIX=$php_linking
++  RUBY_SO_SUFFIX=$ruby_linking
+   AC_MSG_CHECKING(Ruby Linking)
+   AC_MSG_RESULT(compile '$RUBY_CFLAGS' link '$RUBY_LDFLAGS' suffix $RUBY_SO_SUFFIX)
+ else
