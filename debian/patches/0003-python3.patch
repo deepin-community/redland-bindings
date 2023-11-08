@@ -1,0 +1,21 @@
+From: Jann Haber <jann.haber@selfnet.de>
+Date: Sun, 30 Aug 2020 10:38:06 +0200
+Subject: python3
+
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 9cb6398..62aa934 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -56,7 +56,7 @@ LT_INIT
+ AC_CHECK_PROGS(TAR, gnutar gtar tar)
+ 
+ AC_CHECK_PROGS(LUA, lua)
+-AC_CHECK_PROGS(PYTHON, python)
++AC_CHECK_PROGS(PYTHON, python3)
+ AC_CHECK_PROGS(PERL, perl)
+ AC_CHECK_PROGS(PHP, php)
+ AC_CHECK_PROGS(RUBY, ruby)

@@ -1,8 +1,56 @@
-redland-bindings (1.0.17.1+dfsg-1.4-deepin1) unstable; urgency=medium
+redland-bindings (1.0.17.1+dfsg-4) unstable; urgency=medium
 
-  * Rebuild
+  * QA Upload.
+  * d/rules: Hard fail if tests fail for one of the python versions
+  * Build pyext with the correct name for all supported pyvers
+    (Closes: #1024301)
+  * Add in proper autopkgtests for python bindings instead of just an
+    import check. Also ensure that bindings are actually usable with
+    all supported python versions.
 
- -- Deepin Packages Builder <packages@deepin.org>  Fri, 11 Nov 2022 18:03:38 +0800
+ -- Nilesh Patra <nilesh@debian.org>  Fri, 18 Nov 2022 21:20:17 +0530
+
+redland-bindings (1.0.17.1+dfsg-3) unstable; urgency=medium
+
+  * QA upload.
+  * Add missing build dependency on pkg-config. (Closes: #1021324)
+
+ -- Niko Tyni <ntyni@debian.org>  Tue, 11 Oct 2022 22:28:32 +0300
+
+redland-bindings (1.0.17.1+dfsg-2) unstable; urgency=medium
+
+  * QA upload.
+  [ Jann Haber ]
+  * Drop python-librdf package and replace with python3-librdf.
+    Closes: #780741, #938345
+
+  [ Håvard F. Aasen ]
+  * Set Debian QA as maintainer. See #1012730
+  * Remove transitional package. Has been around since stretch.
+  * Add 0004-Update-example-to-be-Python-3-compliant.patch
+  * d/copyright:
+    - Document which files excluded from source tarball.
+    - Update file paragraph * -> debian/*.
+    - Update to secure URI.
+  * d/control:
+    - Bump debhelper to 13.
+    - Remove all version restrictions on build dependencies, no longer applies.
+    - Document Rules-Requires-Root.
+    - Update Standards-Version to 4.6.1
+  * d/rules:
+    - Test for supported Python 3 versions.
+    - Remove unnecessary comments and reorder variables.
+    - Enable build hardening.
+    - Enable Python testsuite.
+  * d/watch:
+    - Bump version to 4.
+    - Update to secure URI.
+  * wrap-and-sort -at
+  * Update all URIs to be secure.
+  * Import correct Python module when running autopkgtest.
+  * Add d/gbp.conf.
+
+ -- Paul Gevers <elbrus@debian.org>  Mon, 01 Aug 2022 21:23:03 +0200
 
 redland-bindings (1.0.17.1+dfsg-1.4) unstable; urgency=medium
 

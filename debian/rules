@@ -1,41 +1,23 @@
 #!/usr/bin/make -f
-# See debhelper(7) (uncomment to enable)
-# output every command that modifies files on the build system.
-#DH_VERBOSE = 1
 
-# see EXAMPLES in dpkg-buildflags(1) and read /usr/share/dpkg/*
-DPKG_EXPORT_BUILDFLAGS = 1
-include /usr/share/dpkg/default.mk
-
-# see FEATURE AREAS in dpkg-buildflags(1)
-#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
-
-# see ENVIRONMENT in dpkg-buildflags(1)
-# package maintainers to append CFLAGS
-#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
-# package maintainers to append LDFLAGS
-#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
-
-
-# main packaging script based on dh7 syntax
-%:
-	dh $@ --with python2 --with ruby --with autoreconf --with autotools-dev --fail-missing
+#export DH_VERBOSE = 1
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
 export PERL := perl
 export RUBY := ruby
 
-# Python versions from constraints in X-Python-Version in debian/control
-PYVERS= $(shell pyversions -r)
-# Default python
-PYDEF= $(shell pyversions -d)
+PYVERS= $(shell py3versions --supported)
+PYDEF= $(shell py3versions --default)
 
-# Perl vendorarch gets dynamic with 5.20
 PERL_ARCHLIB := $(shell perl -MConfig -e 'print $$Config{vendorarch}')
+
+%:
+	dh $@ --with python3 --with ruby
 
 override_dh_auto_configure:
 	dh_auto_configure -- \
 		--enable-release \
-		--with-python=python2 \
+		--with-python=python3 \
 		--with-perl-makemaker-args="INSTALLDIRS=vendor" \
 
 	for python in $(PYVERS); do \
@@ -46,9 +28,10 @@ override_dh_auto_build:
 	dh_auto_build -Dperl
 	dh_auto_build -Druby
 	for python in $(PYVERS); do \
-	  pylib=$$($$python -c 'from distutils import sysconfig; print sysconfig.get_python_lib()'); \
-          PYTHON=$$(echo $$python | sed "s/$(PYDEF)/python/"); \
-	  PYTHON=$$PYTHON dh_auto_build -D$$python -- pythondir=$$pylib PYTHON_INCLUDES=-I/usr/include/$$python; \
+	  pylib=$$($$python -c 'from distutils import sysconfig; print(sysconfig.get_python_lib())'); \
+          PYTHON=$$(echo $$python | sed "s/$(PYDEF)/python3/"); \
+	  pylibext=$$($$python -c 'from distutils import sysconfig; print(sysconfig.get_config_var("EXT_SUFFIX"))'); \
+	  PYTHON=$$PYTHON dh_auto_build -D$$python -- pythondir=$$pylib PYTHON_INCLUDES=-I/usr/include/$$python PYTHON_LIBEXT=$$pylibext; \
 	done
 
 override_dh_auto_clean:
@@ -68,7 +51,15 @@ override_dh_auto_install:
 	dh_auto_install -Druby
 
 	for python in $(PYVERS); do \
-	  pylib=$$($$python -c 'from distutils import sysconfig; print sysconfig.get_python_lib()'); \
-          PYTHON=$$(echo $$python | sed "s/$(PYDEF)/python/"); \
-	  PYTHON=$$PYTHON dh_auto_install -D$$python -- pythondir=$$pylib PYTHON_INCLUDES=-I/usr/include/$$python; \
+	  pylib=$$($$python -c 'from distutils import sysconfig; print(sysconfig.get_python_lib())'); \
+          PYTHON=$$(echo $$python | sed "s/$(PYDEF)/python3/"); \
+	  pylibext=$$($$python -c 'from distutils import sysconfig; print(sysconfig.get_config_var("EXT_SUFFIX"))'); \
+	  PYTHON=$$PYTHON dh_auto_install -D$$python -- pythondir=$$pylib PYTHON_INCLUDES=-I/usr/include/$$python PYTHON_LIBEXT=$$pylibext; \
 	done
+
+override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	for python in $(PYVERS); do \
+		$(MAKE) -C $$python check-local PYTHON=$$python || exit $?; \
+	done
+endif
