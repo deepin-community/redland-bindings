@@ -1,2 +1,4 @@
 0001-Don-t-undef-bool-it-s-needed.patch
 0002-Fix-the-ruby-SO-suffix.patch
+0003-python3.patch
+0004-Update-example-to-be-Python-3-compliant.patch

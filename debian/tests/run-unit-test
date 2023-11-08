@@ -1,0 +1,36 @@
+#!/bin/sh
+set -e
+
+pkg=redland-bindings
+
+export LC_ALL=C.UTF-8
+if [ "${AUTOPKGTEST_TMP}" = "" ] ; then
+  AUTOPKGTEST_TMP=$(mktemp -d /tmp/${pkg}-test.XXXXXX)
+  trap "rm -rf ${AUTOPKGTEST_TMP}" 0 INT QUIT ABRT PIPE TERM
+fi
+
+cd "${AUTOPKGTEST_TMP}"
+
+echo "Test 1 - Check Redland and rdf import"
+for py in `py3versions -s`; do \
+	$py -c "import Redland" ; \
+	$py -c "import RDF" ; \
+done
+
+echo "Test 2 - Run example script"
+
+# Preparing pre-condition for test 2
+mkdir -p data
+
+cp /usr/share/doc/python3-librdf/examples/example.py data/
+cp -a /usr/share/doc/python3-librdf/examples/dc.rdf data/
+cd data/
+
+for py in `py3versions -s`; do \
+	echo "Running with python: $py"; \
+	$py example.py; \
+done
+
+# Cleanup
+cd "${AUTOPKGTEST_TMP}"
+rm -rf data

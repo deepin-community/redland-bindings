@@ -1,0 +1,70 @@
+From: Håvard F. Aasen <havard.f.aasen@pfft.no>
+Date: Tue, 26 Jul 2022 18:30:46 +0200
+Subject: Update example to be Python 3 compliant
+
+---
+ python/example.py | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/python/example.py b/python/example.py
+index cc93402..d772156 100644
+--- a/python/example.py
++++ b/python/example.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/python3
+ #
+ # example.py - Redland Python 2.0 example code
+ #
+@@ -44,11 +44,11 @@ model.add_statement(statement)
+ 
+ # Match against an empty statement - find everything
+ for s in model.find_statements(RDF.Statement()):
+-  print "found statement:",s
++  print("found statement:",s)
+ 
+ test_file='../data/dc.rdf'
+ 
+-print "Parsing URI (file)", test_file
++print("Parsing URI (file)", test_file)
+ uri=RDF.Uri(string="file:"+test_file)
+ 
+ parser=RDF.Parser('raptor')
+@@ -60,27 +60,27 @@ for s in parser.parse_as_stream(uri,uri):
+   model.add_statement(s)
+   count=count+1
+ 
+-print "Parsing added",count,"statements"
++print("Parsing added",count,"statements")
+ 
+-print "Printing all statements"
++print("Printing all statements")
+ for s in model.as_stream():
+-  print "Statement:",s
++  print("Statement:",s)
+ 
+ q = RDF.Query("PREFIX dc: <http://purl.org/dc/elements/1.1/> SELECT ?a ?c WHERE {?a dc:title ?c}")
+-print "Querying for dc:titles:"
++print("Querying for dc:titles:")
+ for result in q.execute(model):
+-  print "{"
++  print("{")
+   for k in result:
+-    print "  "+k+" = "+str(result[k])
+-  print "}"
++    print("  "+k+" = "+str(result[k]))
++  print("}")
+ 
+-print "Writing model to test-out.rdf as rdf/xml"
++print("Writing model to test-out.rdf as rdf/xml")
+ 
+ # Use any rdf/xml parser that is available
+ serializer=RDF.Serializer()
+ serializer.set_namespace("dc", RDF.Uri("http://purl.org/dc/elements/1.1/"))
+ serializer.serialize_model_to_file("test-out.rdf", model)
+ 
+-print "Serialized to ntriples as a string size",len(model.to_string(name="ntriples", base_uri="http://example.org/base#")),"bytes"
++print("Serialized to ntriples as a string size",len(model.to_string(name="ntriples", base_uri="http://example.org/base#")),"bytes")
+ 
+-print "Done"
++print("Done")
