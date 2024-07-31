@@ -3,20 +3,18 @@ Section: devel
 Priority: optional
 Maintainer: Debian QA Group <packages@qa.debian.org>
 Build-Depends: debhelper-compat (= 13),
-               dh-python,
                gem2deb,
                librdf0-dev,
                libtool,
                perl,
                pkg-config,
-               python3-all-dev,
                ruby,
                ruby-dev,
                swig,
 Rules-Requires-Root: no
 Vcs-Git: https://salsa.debian.org/debian/redland-bindings.git
 Vcs-Browser: https://salsa.debian.org/debian/redland-bindings
-Standards-Version: 4.6.1
+Standards-Version: 4.6.2
 Homepage: https://librdf.org/
 
 Package: librdf-perl
@@ -30,18 +28,6 @@ Description: Perl language bindings for the Redland RDF library
  Framework (RDF) library providing an object-oriented interface in
  the RDF::Redland package.
 Homepage: https://librdf.org/docs/perl.html
-
-Package: python3-librdf
-Architecture: any
-Section: python
-Depends: ${misc:Depends},
-         ${python3:Depends},
-         ${shlibs:Depends},
-Provides: ${python3:Provides},
-Description: Python language bindings for the Redland RDF library
- This package contains the files needed to use the Redland Resource
- Description Framework (RDF) library in Python programs.
-Homepage: https://librdf.org/docs/python.html
 
 Package: ruby-librdf
 Architecture: any
