@@ -1,3 +1,19 @@
+redland-bindings (1.0.17.1+dfsg-6) unstable; urgency=medium
+
+  * QA upload.
+  * Drop the autopkg test (Python only).
+
+ -- Matthias Klose <doko@debian.org>  Thu, 14 Dec 2023 09:34:03 +0100
+
+redland-bindings (1.0.17.1+dfsg-5) unstable; urgency=medium
+
+  * QA upload.
+  * Stop building python3-librdf. Closes: #1055550, #1056518, #476717.
+  * Bump standards version.
+  * Consider to remove that package entirely ...
+
+ -- Matthias Klose <doko@debian.org>  Wed, 13 Dec 2023 08:29:16 +0100
+
 redland-bindings (1.0.17.1+dfsg-4) unstable; urgency=medium
 
   * QA Upload.

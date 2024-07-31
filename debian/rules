@@ -6,40 +6,23 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 export PERL := perl
 export RUBY := ruby
 
-PYVERS= $(shell py3versions --supported)
-PYDEF= $(shell py3versions --default)
-
 PERL_ARCHLIB := $(shell perl -MConfig -e 'print $$Config{vendorarch}')
 
 %:
-	dh $@ --with python3 --with ruby
+	dh $@ --with ruby
 
 override_dh_auto_configure:
 	dh_auto_configure -- \
 		--enable-release \
-		--with-python=python3 \
+		--without-python \
 		--with-perl-makemaker-args="INSTALLDIRS=vendor" \
-
-	for python in $(PYVERS); do \
-	  cp -a python $$python; \
-	done
 
 override_dh_auto_build:
 	dh_auto_build -Dperl
 	dh_auto_build -Druby
-	for python in $(PYVERS); do \
-	  pylib=$$($$python -c 'from distutils import sysconfig; print(sysconfig.get_python_lib())'); \
-          PYTHON=$$(echo $$python | sed "s/$(PYDEF)/python3/"); \
-	  pylibext=$$($$python -c 'from distutils import sysconfig; print(sysconfig.get_config_var("EXT_SUFFIX"))'); \
-	  PYTHON=$$PYTHON dh_auto_build -D$$python -- pythondir=$$pylib PYTHON_INCLUDES=-I/usr/include/$$python PYTHON_LIBEXT=$$pylibext; \
-	done
 
 override_dh_auto_clean:
 	dh_auto_clean -Dperl
-	dh_auto_clean -Dpython
-	for python in $(PYVERS); do \
-	  rm -rf $$python; \
-	done
 	dh_auto_clean -Druby
 	dh_auto_clean
 
@@ -49,17 +32,3 @@ override_dh_auto_install:
 	mv $(CURDIR)/debian/tmp$(PERL_ARCHLIB)/RDF $(CURDIR)/debian/tmp/usr/share/perl5/RDF
 
 	dh_auto_install -Druby
-
-	for python in $(PYVERS); do \
-	  pylib=$$($$python -c 'from distutils import sysconfig; print(sysconfig.get_python_lib())'); \
-          PYTHON=$$(echo $$python | sed "s/$(PYDEF)/python3/"); \
-	  pylibext=$$($$python -c 'from distutils import sysconfig; print(sysconfig.get_config_var("EXT_SUFFIX"))'); \
-	  PYTHON=$$PYTHON dh_auto_install -D$$python -- pythondir=$$pylib PYTHON_INCLUDES=-I/usr/include/$$python PYTHON_LIBEXT=$$pylibext; \
-	done
-
-override_dh_auto_test:
-ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
-	for python in $(PYVERS); do \
-		$(MAKE) -C $$python check-local PYTHON=$$python || exit $?; \
-	done
-endif
